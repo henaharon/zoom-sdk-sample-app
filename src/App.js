@@ -1,4 +1,8 @@
+import React, { useState } from "react";
+import {JoinForm, HostForm} from './Form';
+import { ButtonGroup, Button } from '@material-ui/core'
 import './App.css';
+import { urls } from './consts'
 
 declare var ZoomMtg
 
@@ -10,57 +14,69 @@ ZoomMtg.prepareJssdk();
 ZoomMtg.i18n.load('en-US');
 ZoomMtg.i18n.reload('en-US');
 
-function App() {
+const App = () => {
+  var signatureEndpoint = urls.SERVER_URL
+  const zoomConfig = {
+    apiKey: urls.API_KEY, 
+    meetingNumber: "",
+    passWord: "",
+    leaveUrl: urls.LEAVE_URL,
+    userName: "",
+    userEmail: "", 
+    role: 0, // 0 for guest, 1 for host
+  };
 
-  // setup your signature endpoint here: https://github.com/zoom/websdk-sample-signature-node.js
-  var signatureEndpoint = ''
-  var apiKey = ''
-  var meetingNumber = '123456789'
-  var role = 0
-  var leaveUrl = 'http://localhost:3000'
-  var userName = 'React'
-  var userEmail = ''
-  var passWord = ''
+  const [config, setConfig] = useState(zoomConfig);
+  const [formVisibility , setVisibility] = useState(0);
 
-  function getSignature(e) {
-    e.preventDefault();
+  const createMeeting = async () => {
+    const res = await fetch(`${urls.SERVER_URL}/createMeeting`, {
+      method: 'GET',
+      headers: { 
+                  'Content-Type': 'application/json', 
+                },
+    });
+    const response = await res.json()
+    getSignature(response.id, response.password)
+  }
 
+
+  function getSignature(meetingNumber, pass) {
+    const role = config.userEmail !== "" ? 1 : 0
     fetch(signatureEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        meetingNumber: meetingNumber,
+        meetingNumber: meetingNumber ? meetingNumber : config.meetingNumber,
         role: role
       })
     }).then(res => res.json())
     .then(response => {
-      startMeeting(response.signature)
+      startMeeting(response.signature, meetingNumber, pass)
     }).catch(error => {
       console.error(error)
     })
   }
 
-  function startMeeting(signature) {
+  function startMeeting(signature, meetingNumber, pass) {
+    const number = meetingNumber ? meetingNumber : config.meetingNumber
+    const password = pass ? pass : config.passWord
     document.getElementById('zmmtg-root').style.display = 'block'
-
     ZoomMtg.init({
-      leaveUrl: leaveUrl,
+      leaveUrl: config.leaveUrl,
       isSupportAV: true,
       success: (success) => {
-        console.log(success)
-
         ZoomMtg.join({
           signature: signature,
-          meetingNumber: meetingNumber,
-          userName: userName,
-          apiKey: apiKey,
-          userEmail: userEmail,
-          passWord: passWord,
+          meetingNumber: String(number),
+          passWord: String(password),
+          userName: config.userName,
+          apiKey: config.apiKey,
+          userEmail: config.userEmail,
           success: (success) => {
-            console.log(success)
           },
           error: (error) => {
-            console.log(error)
+            console.log('error', error)
           }
         })
 
@@ -71,12 +87,48 @@ function App() {
     })
   }
 
+  const handleChange = (e) => {
+    setConfig({
+      ...config,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmitJoin = (e) => {
+    e.preventDefault();
+    getSignature()
+  };
+
+  const handleSubmitHost = async (e) => {
+    e.preventDefault();
+    await createMeeting()
+  };
+
   return (
     <div className="App">
       <main>
         <h1>Zoom WebSDK Sample React</h1>
+        <ButtonGroup style={{marginTop: '100px'}} color="primary" aria-label="outlined primary button group">
+          <Button onClick={() => setVisibility(0)}>Join</Button>
+          <Button onClick={() => setVisibility(1)}>Host</Button>
+        </ButtonGroup>
+        <div className="rowStyle">
+          <div className="formCard" style={formVisibility === 1  ? {display: "none" } : {}}>
+            <h2>Join</h2>
+            <JoinForm         
+              handleSubmit={handleSubmitJoin}
+              handleChange={handleChange}
+              config={config}/>
+          </div>
+          <div className="formCard" style={formVisibility === 0 ? {display: "none" } : {}}>
+            <h2>Host</h2>
+            <HostForm         
+              handleSubmit={handleSubmitHost}
+              handleChange={handleChange}
+              config={config}/>
+          </div>
+        </div>
 
-        <button onClick={getSignature}>Join Meeting</button>
       </main>
     </div>
   );

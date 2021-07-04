@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/zoom-sdk-sample-app/static/css/main.1c632772.chunk.css",
+    "main.js": "/zoom-sdk-sample-app/static/js/main.ddf118e0.chunk.js",
+    "main.js.map": "/zoom-sdk-sample-app/static/js/main.ddf118e0.chunk.js.map",
+    "runtime-main.js": "/zoom-sdk-sample-app/static/js/runtime-main.1e41fad4.js",
+    "runtime-main.js.map": "/zoom-sdk-sample-app/static/js/runtime-main.1e41fad4.js.map",
+    "static/js/2.b1d081ee.chunk.js": "/zoom-sdk-sample-app/static/js/2.b1d081ee.chunk.js",
+    "static/js/2.b1d081ee.chunk.js.map": "/zoom-sdk-sample-app/static/js/2.b1d081ee.chunk.js.map",
+    "static/js/3.a065f072.chunk.js": "/zoom-sdk-sample-app/static/js/3.a065f072.chunk.js",
+    "static/js/3.a065f072.chunk.js.map": "/zoom-sdk-sample-app/static/js/3.a065f072.chunk.js.map",
+    "index.html": "/zoom-sdk-sample-app/index.html",
+    "static/css/main.1c632772.chunk.css.map": "/zoom-sdk-sample-app/static/css/main.1c632772.chunk.css.map",
+    "static/js/2.b1d081ee.chunk.js.LICENSE.txt": "/zoom-sdk-sample-app/static/js/2.b1d081ee.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1e41fad4.js",
+    "static/js/2.b1d081ee.chunk.js",
+    "static/css/main.1c632772.chunk.css",
+    "static/js/main.ddf118e0.chunk.js"
+  ]
+}

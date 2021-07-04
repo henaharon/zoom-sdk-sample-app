@@ -23,3 +23,16 @@ main button {
 main button:hover {
   background-color: #2681F2;
 }
+
+.rowStyle {
+  display: flex;
+  flex-direction: row;
+  margin-top: 70px;
+}
+
+.formCard {
+  border-width: 1px;
+  border-color: black;
+  width: 700px ;
+  align-items: center;
+}
